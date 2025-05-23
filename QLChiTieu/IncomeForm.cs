@@ -43,6 +43,10 @@ namespace QLChiTieu
 
             //Căn giữa tiêu đề cột
             income_dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            //Chỉnh màu nền cho tiêu đề cột
+            //income_dgv.EnableHeadersVisualStyles = false;
+            //income_dgv.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(0, 120, 215);
+
 
             // Định dạng thêm cho các cột
             income_dgv.Columns[0].Width = 50;          // Độ rộng cột
