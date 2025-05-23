@@ -30,29 +30,29 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.income_dgv = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.register_btn = new System.Windows.Forms.Button();
-            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.income_clearBtn = new System.Windows.Forms.Button();
+            this.income_deleteBtn = new System.Windows.Forms.Button();
+            this.income_editBtn = new System.Windows.Forms.Button();
+            this.income_addBtn = new System.Windows.Forms.Button();
+            this.income_date = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.income_note = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.income_group = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.income_money = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.income_dgv)).BeginInit();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.dataGridView1);
+            this.panel1.Controls.Add(this.income_dgv);
             this.panel1.Location = new System.Drawing.Point(15, 19);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(830, 359);
@@ -68,14 +68,15 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Danh sách khoản thu";
             // 
-            // dataGridView1
+            // income_dgv
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(14, 41);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowHeadersWidth = 51;
-            this.dataGridView1.Size = new System.Drawing.Size(802, 315);
-            this.dataGridView1.TabIndex = 0;
+            this.income_dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.income_dgv.Location = new System.Drawing.Point(14, 41);
+            this.income_dgv.Name = "income_dgv";
+            this.income_dgv.RowHeadersWidth = 51;
+            this.income_dgv.Size = new System.Drawing.Size(802, 315);
+            this.income_dgv.TabIndex = 0;
+            this.income_dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.income_dgv_CellClick);
             // 
             // label2
             // 
@@ -86,19 +87,18 @@
             this.label2.Size = new System.Drawing.Size(58, 19);
             this.label2.TabIndex = 1;
             this.label2.Text = "Số tiền";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.button2);
-            this.panel2.Controls.Add(this.button3);
-            this.panel2.Controls.Add(this.button1);
-            this.panel2.Controls.Add(this.register_btn);
-            this.panel2.Controls.Add(this.dateTimePicker1);
+            this.panel2.Controls.Add(this.income_clearBtn);
+            this.panel2.Controls.Add(this.income_deleteBtn);
+            this.panel2.Controls.Add(this.income_editBtn);
+            this.panel2.Controls.Add(this.income_addBtn);
+            this.panel2.Controls.Add(this.income_date);
             this.panel2.Controls.Add(this.label5);
-            this.panel2.Controls.Add(this.textBox2);
+            this.panel2.Controls.Add(this.income_note);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.comboBox1);
+            this.panel2.Controls.Add(this.income_group);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.income_money);
             this.panel2.Controls.Add(this.label2);
@@ -107,83 +107,86 @@
             this.panel2.Size = new System.Drawing.Size(830, 263);
             this.panel2.TabIndex = 2;
             // 
-            // button2
+            // income_clearBtn
             // 
-            this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
-            this.button2.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.White;
-            this.button2.Location = new System.Drawing.Point(642, 206);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(122, 40);
-            this.button2.TabIndex = 15;
-            this.button2.Text = "Xoá bảng";
-            this.button2.UseVisualStyleBackColor = false;
+            this.income_clearBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
+            this.income_clearBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_clearBtn.FlatAppearance.BorderSize = 0;
+            this.income_clearBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_clearBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_clearBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.income_clearBtn.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_clearBtn.ForeColor = System.Drawing.Color.White;
+            this.income_clearBtn.Location = new System.Drawing.Point(642, 206);
+            this.income_clearBtn.Name = "income_clearBtn";
+            this.income_clearBtn.Size = new System.Drawing.Size(122, 40);
+            this.income_clearBtn.TabIndex = 15;
+            this.income_clearBtn.Text = "Xoá bảng";
+            this.income_clearBtn.UseVisualStyleBackColor = false;
             // 
-            // button3
+            // income_deleteBtn
             // 
-            this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
-            this.button3.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.ForeColor = System.Drawing.Color.White;
-            this.button3.Location = new System.Drawing.Point(460, 206);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(122, 40);
-            this.button3.TabIndex = 14;
-            this.button3.Text = "Xoá";
-            this.button3.UseVisualStyleBackColor = false;
+            this.income_deleteBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
+            this.income_deleteBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_deleteBtn.FlatAppearance.BorderSize = 0;
+            this.income_deleteBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_deleteBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_deleteBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.income_deleteBtn.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_deleteBtn.ForeColor = System.Drawing.Color.White;
+            this.income_deleteBtn.Location = new System.Drawing.Point(460, 206);
+            this.income_deleteBtn.Name = "income_deleteBtn";
+            this.income_deleteBtn.Size = new System.Drawing.Size(122, 40);
+            this.income_deleteBtn.TabIndex = 14;
+            this.income_deleteBtn.Text = "Xoá";
+            this.income_deleteBtn.UseVisualStyleBackColor = false;
+            this.income_deleteBtn.Click += new System.EventHandler(this.income_deleteBtn_Click);
             // 
-            // button1
+            // income_editBtn
             // 
-            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
-            this.button1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(280, 206);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(122, 40);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "Sửa";
-            this.button1.UseVisualStyleBackColor = false;
+            this.income_editBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
+            this.income_editBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_editBtn.FlatAppearance.BorderSize = 0;
+            this.income_editBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_editBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_editBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.income_editBtn.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_editBtn.ForeColor = System.Drawing.Color.White;
+            this.income_editBtn.Location = new System.Drawing.Point(280, 206);
+            this.income_editBtn.Name = "income_editBtn";
+            this.income_editBtn.Size = new System.Drawing.Size(122, 40);
+            this.income_editBtn.TabIndex = 13;
+            this.income_editBtn.Text = "Sửa";
+            this.income_editBtn.UseVisualStyleBackColor = false;
+            this.income_editBtn.Click += new System.EventHandler(this.income_editBtn_Click);
             // 
-            // register_btn
+            // income_addBtn
             // 
-            this.register_btn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
-            this.register_btn.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.register_btn.FlatAppearance.BorderSize = 0;
-            this.register_btn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.register_btn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
-            this.register_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.register_btn.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.register_btn.ForeColor = System.Drawing.Color.White;
-            this.register_btn.Location = new System.Drawing.Point(98, 206);
-            this.register_btn.Name = "register_btn";
-            this.register_btn.Size = new System.Drawing.Size(122, 40);
-            this.register_btn.TabIndex = 12;
-            this.register_btn.Text = "Thêm";
-            this.register_btn.UseVisualStyleBackColor = false;
+            this.income_addBtn.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(49)))), ((int)(((byte)(121)))), ((int)(((byte)(84)))));
+            this.income_addBtn.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_addBtn.FlatAppearance.BorderSize = 0;
+            this.income_addBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_addBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(93)))), ((int)(((byte)(160)))), ((int)(((byte)(108)))));
+            this.income_addBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.income_addBtn.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_addBtn.ForeColor = System.Drawing.Color.White;
+            this.income_addBtn.Location = new System.Drawing.Point(98, 206);
+            this.income_addBtn.Name = "income_addBtn";
+            this.income_addBtn.Size = new System.Drawing.Size(122, 40);
+            this.income_addBtn.TabIndex = 12;
+            this.income_addBtn.Text = "Thêm";
+            this.income_addBtn.UseVisualStyleBackColor = false;
+            this.income_addBtn.Click += new System.EventHandler(this.income_addBtn_Click);
             // 
-            // dateTimePicker1
+            // income_date
             // 
-            this.dateTimePicker1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.dateTimePicker1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimePicker1.Location = new System.Drawing.Point(499, 132);
-            this.dateTimePicker1.Name = "dateTimePicker1";
-            this.dateTimePicker1.Size = new System.Drawing.Size(141, 26);
-            this.dateTimePicker1.TabIndex = 8;
+            this.income_date.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_date.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_date.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.income_date.Location = new System.Drawing.Point(499, 132);
+            this.income_date.Name = "income_date";
+            this.income_date.Size = new System.Drawing.Size(141, 26);
+            this.income_date.TabIndex = 8;
             // 
             // label5
             // 
@@ -195,14 +198,14 @@
             this.label5.TabIndex = 7;
             this.label5.Text = "Ngày tháng";
             // 
-            // textBox2
+            // income_note
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(499, 30);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(300, 88);
-            this.textBox2.TabIndex = 6;
+            this.income_note.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_note.Location = new System.Drawing.Point(499, 30);
+            this.income_note.Multiline = true;
+            this.income_note.Name = "income_note";
+            this.income_note.Size = new System.Drawing.Size(300, 88);
+            this.income_note.TabIndex = 6;
             // 
             // label4
             // 
@@ -214,21 +217,21 @@
             this.label4.TabIndex = 5;
             this.label4.Text = "Ghi chú";
             // 
-            // comboBox1
+            // income_group
             // 
-            this.comboBox1.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.comboBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.income_group.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.income_group.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.income_group.FormattingEnabled = true;
+            this.income_group.Items.AddRange(new object[] {
             "Lương",
             "Thu nhập khác",
             "Tiền chuyển đến",
             "Thu lãi",
             "Khoản thu chưa phân loại"});
-            this.comboBox1.Location = new System.Drawing.Point(94, 131);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(245, 28);
-            this.comboBox1.TabIndex = 4;
+            this.income_group.Location = new System.Drawing.Point(94, 131);
+            this.income_group.Name = "income_group";
+            this.income_group.Size = new System.Drawing.Size(245, 28);
+            this.income_group.TabIndex = 4;
             // 
             // label3
             // 
@@ -239,7 +242,6 @@
             this.label3.Size = new System.Drawing.Size(52, 19);
             this.label3.TabIndex = 3;
             this.label3.Text = "Nhóm";
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // income_money
             // 
@@ -248,7 +250,6 @@
             this.income_money.Name = "income_money";
             this.income_money.Size = new System.Drawing.Size(245, 38);
             this.income_money.TabIndex = 2;
-            this.income_money.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // IncomeForm
             // 
@@ -258,9 +259,10 @@
             this.Controls.Add(this.panel1);
             this.Name = "IncomeForm";
             this.Size = new System.Drawing.Size(859, 650);
+            this.Load += new System.EventHandler(this.IncomeForm_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.income_dgv)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -270,20 +272,20 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView income_dgv;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.TextBox income_money;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox income_group;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox income_note;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DateTimePicker dateTimePicker1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button register_btn;
+        private System.Windows.Forms.DateTimePicker income_date;
+        private System.Windows.Forms.Button income_clearBtn;
+        private System.Windows.Forms.Button income_deleteBtn;
+        private System.Windows.Forms.Button income_editBtn;
+        private System.Windows.Forms.Button income_addBtn;
     }
 }
