@@ -123,6 +123,7 @@
             this.income_clearBtn.TabIndex = 15;
             this.income_clearBtn.Text = "Xoá bảng";
             this.income_clearBtn.UseVisualStyleBackColor = false;
+            this.income_clearBtn.Click += new System.EventHandler(this.income_clearBtn_Click);
             // 
             // income_deleteBtn
             // 
