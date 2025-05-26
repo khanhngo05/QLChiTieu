@@ -146,6 +146,7 @@ namespace QLChiTieu
             // Lấy id từ cột đầu tiên (index 0)
             tempID = income_dgv.CurrentRow.Cells[0].Value.ToString();
 
+            // Hiển thị dữ liệu vào các ô nhập liệu
             income_money.Text = income_dgv.CurrentRow.Cells[1].Value.ToString();
             income_group.Text = income_dgv.CurrentRow.Cells[2].Value.ToString();
             income_note.Text = income_dgv.CurrentRow.Cells[3].Value.ToString();
