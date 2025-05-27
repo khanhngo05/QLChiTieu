@@ -72,6 +72,11 @@ namespace QLChiTieu
 
         private void login_btn_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(login_username.Text) || string.IsNullOrWhiteSpace(login_password.Text))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             using (SqlConnection connect = new SqlConnection(stringConnetion))
             {
                 connect.Open();

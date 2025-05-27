@@ -167,6 +167,16 @@ namespace QLChiTieu
         {
             try
             {
+                if(string.IsNullOrEmpty(tempID))
+                {
+                    MessageBox.Show("Vui lòng chọn một khoản thu để xóa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                else if (MessageBox.Show("Bạn có chắc muốn xóa khoản thu này không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                {
+                    return; // Nếu người dùng chọn No, thoát khỏi hàm
+                }
+
                 connection.Open();
                 string deleteData = "DELETE FROM KhoanThu WHERE id = @STT";
                 using (SqlCommand deleteCommand = new SqlCommand(deleteData, connection))

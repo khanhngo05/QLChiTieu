@@ -73,6 +73,7 @@
             this.income_dgv.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.income_dgv.Location = new System.Drawing.Point(14, 41);
             this.income_dgv.Name = "income_dgv";
+            this.income_dgv.ReadOnly = true;
             this.income_dgv.RowHeadersWidth = 51;
             this.income_dgv.Size = new System.Drawing.Size(802, 315);
             this.income_dgv.TabIndex = 0;
