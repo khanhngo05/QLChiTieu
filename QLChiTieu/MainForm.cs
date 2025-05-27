@@ -12,11 +12,26 @@ namespace QLChiTieu
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        public MainForm(string username)
         {
             InitializeComponent();
+            label2.Text = username;
+
+            // Căn giữa label2 dưới pictureBox2
+            label2.AutoSize = true; // Cho phép label tự điều chỉnh kích thước theo nội dung
+
+            // Tính toán vị trí để căn giữa label2 dưới pictureBox2
+            int x = pictureBox2.Left + (pictureBox2.Width - label2.Width) / 2;
+            int y = pictureBox2.Bottom + 5; // Cách pictureBox2 5 pixels
+
+            label2.Location = new Point(x, y);
             FormBorderStyle = FormBorderStyle.Sizable;
         }
+
+        //public MainForm()
+        //{
+        //    InitializeComponent();
+        //}
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             base.OnFormClosing(e);

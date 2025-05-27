@@ -47,7 +47,7 @@ namespace QLChiTieu
         private void button1_Click(object sender, EventArgs e)
         {
 
-            MainForm mainForm = new MainForm();
+            MainForm mainForm = new MainForm(login_username.Text);
             mainForm.ShowDialog();
             this.Hide();
         }
@@ -100,7 +100,7 @@ namespace QLChiTieu
                     else
                     {
                         MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        MainForm mainForm = new MainForm();
+                        MainForm mainForm = new MainForm(login_username.Text);
                         mainForm.Show();
                         this.Hide();
                     }
