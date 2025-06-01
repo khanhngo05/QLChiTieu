@@ -12,9 +12,20 @@ namespace QLChiTieu
 {
     public partial class MainForm : Form
     {
+        private DebtBook debtBook;
+        private IncomeForm incomeForm;
+
         public MainForm(string username)
         {
             InitializeComponent();
+            // Khởi tạo các UserControl
+            debtBook = new DebtBook();
+            incomeForm = new IncomeForm();
+
+            // Thiết lập các thuộc tính cho UserControl
+            debtBook.Dock = DockStyle.Fill;
+            incomeForm.Dock = DockStyle.Fill;
+
             label2.Text = username;
 
             // Căn giữa label2 dưới pictureBox2
@@ -70,6 +81,20 @@ namespace QLChiTieu
                 loginForm.ShowDialog();
                 this.Close();
             }
+        }
+
+        private void btnKhoanThu_Click(object sender, EventArgs e)
+        {
+            panel3.Controls.Clear(); // Xóa control hiện tại trong panel
+            panel3.Controls.Add(incomeForm); // Thêm IncomeForm
+            incomeForm.BringToFront(); // Đưa lên trên cùng
+        }
+
+        private void btnSoNo_Click(object sender, EventArgs e)
+        {
+            panel3.Controls.Clear(); // Xóa control hiện tại trong panel
+            panel3.Controls.Add(debtBook); // Thêm DebtBook
+            debtBook.BringToFront(); // Đưa lên trên cùng
         }
     }
 }

@@ -20,6 +20,7 @@ namespace QLChiTieu
         DataTable table = new DataTable();
 
         string tempID = null;
+        int tempLoc = 0; // Biến tạm để lưu giá trị lọc
 
         void loadData()
         {
@@ -233,6 +234,138 @@ namespace QLChiTieu
                 income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
 
                 connection.Close();
+            }
+        }
+
+        private void HideLabel()
+        {
+            income_lbLocDanhMuc.Visible = false;
+            income_cbLocDanhMuc.Visible = false;
+            income_lbLocSoTienDau.Visible = false;
+            income_tbLocSoTienDau.Visible = false;
+            income_lbLocSoTienCuoi.Visible = false;
+            income_tbLocSoTienCuoi.Visible = false;
+            income_lbLocNgayDau.Visible = false;
+            income_dtpLocNgayDau.Visible = false;
+            income_lbLocNgayCuoi.Visible = false;
+            income_dtpLocNgayCuoi.Visible = false;
+        }
+
+        private void income_cbChonTruongLoc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            loadData();
+            switch(income_cbChonTruongLoc.SelectedIndex)
+            {
+                case 0: // Danh mục
+                    HideLabel();
+                    income_lbLocDanhMuc.Visible = true;
+                    income_cbLocDanhMuc.Visible = true;
+                    tempLoc = 0; // Cập nhật biến tạm để lưu giá trị lọc
+                    break;
+                case 1: // Số tiền
+                    HideLabel();
+                    income_lbLocSoTienDau.Visible = true;
+                    income_tbLocSoTienDau.Visible = true;
+                    income_lbLocSoTienCuoi.Visible = true;
+                    income_tbLocSoTienCuoi.Visible = true;
+                    tempLoc = 1; // Cập nhật biến tạm để lưu giá trị lọc
+                    break;
+                case 2: // Ngày tháng
+                    HideLabel();
+                    income_lbLocNgayDau.Visible = true;
+                    income_dtpLocNgayDau.Visible = true;
+                    income_lbLocNgayCuoi.Visible = true;
+                    income_dtpLocNgayCuoi.Visible = true;
+                    tempLoc = 2; // Cập nhật biến tạm để lưu giá trị lọc
+                    break;
+            }
+        }
+
+        private void income_cbLocDanhMuc_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void income_btnFilter_Click(object sender, EventArgs e)
+        {
+            switch (tempLoc)
+            {
+                case 0:
+                    // Lọc theo danh mục
+                    if (income_cbLocDanhMuc.SelectedIndex == -1)
+                    {
+                        MessageBox.Show("Vui lòng chọn danh mục để lọc!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    string selectedCategory = income_cbLocDanhMuc.SelectedItem.ToString();
+                    command = connection.CreateCommand();
+                    command.CommandText = "SELECT * FROM KhoanThu WHERE Nhom = @Nhom";
+                    command.Parameters.AddWithValue("@Nhom", selectedCategory);
+                    adapter.SelectCommand = command;
+                    table.Clear();
+                    adapter.Fill(table);
+                    income_dgv.DataSource = table;
+                    break;
+                case 1:
+                    // Lọc theo số tiền
+                    if (string.IsNullOrEmpty(income_tbLocSoTienDau.Text) || string.IsNullOrEmpty(income_tbLocSoTienCuoi.Text))
+                    {
+                        MessageBox.Show("Vui lòng nhập khoảng số tiền để lọc!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    decimal minAmount, maxAmount;
+                    if (!decimal.TryParse(income_tbLocSoTienDau.Text, out minAmount) || !decimal.TryParse(income_tbLocSoTienCuoi.Text, out maxAmount))
+                    {
+                        MessageBox.Show("Vui lòng nhập số tiền hợp lệ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                    command = connection.CreateCommand();
+                    command.CommandText = "SELECT * FROM KhoanThu WHERE SoTien BETWEEN @MinAmount AND @MaxAmount";
+                    command.Parameters.AddWithValue("@MinAmount", minAmount);
+                    command.Parameters.AddWithValue("@MaxAmount", maxAmount);
+                    adapter.SelectCommand = command;
+                    table.Clear();
+                    adapter.Fill(table);
+                    income_dgv.DataSource = table;
+                    break;
+                case 2:
+                    // Lọc theo ngày tháng
+                    DateTime startDate = income_dtpLocNgayDau.Value.Date; // Lấy ngày bắt đầu và đặt thời gian về 00:00:00
+                    DateTime endDate = income_dtpLocNgayCuoi.Value.Date.AddDays(1).AddSeconds(-1); // Lấy ngày kết thúc và đặt thời gian về 23:59:59
+
+                    if (startDate > endDate)
+                    {
+                        MessageBox.Show("Ngày bắt đầu không được lớn hơn ngày kết thúc!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    command = connection.CreateCommand();
+                    command.CommandText = "SELECT * FROM KhoanThu WHERE NgayThang BETWEEN @StartDate AND @EndDate";
+                    command.Parameters.AddWithValue("@StartDate", startDate);
+                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    adapter.SelectCommand = command;
+                    table.Clear();
+                    adapter.Fill(table);
+                    income_dgv.DataSource = table;
+                    break;
+            }
+        }
+
+        private void income_loadDGV_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                connection.Open();
+                loadData(); // Tải lại dữ liệu từ cơ sở dữ liệu
+                MessageBox.Show("Đã tải lại dữ liệu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                connection.Close(); // Đóng kết nối sau khi hoàn thành
             }
         }
     }

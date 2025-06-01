@@ -78,6 +78,12 @@
     <Compile Include="ThongKe.Designer.cs">
       <DependentUpon>ThongKe.cs</DependentUpon>
     </Compile>
+    <Compile Include="DebtBook.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DebtBook.Designer.cs">
+      <DependentUpon>DebtBook.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="IncomeForm.resx">
       <DependentUpon>IncomeForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -102,6 +108,9 @@
     </Compile>
     <EmbeddedResource Include="RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DebtBook.resx">
+      <DependentUpon>DebtBook.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
