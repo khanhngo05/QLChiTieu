@@ -22,10 +22,23 @@ namespace QLChiTieu
         string tempID = null;
         int tempLoc = 0; // Biến tạm để lưu giá trị lọc
 
+        private string currentUsername;
+        public void LoadDataForUser(string username)
+        {
+            currentUsername = username;
+            if (connection == null)
+            {
+                connection = new SqlConnection(str);
+            }
+            connection.Open();
+            loadData();
+            connection.Close();
+        }
         void loadData()
         {
             command = connection.CreateCommand();
-            command.CommandText = "select * from KhoanThu";
+            command.CommandText = "select * from QLThuChi where Loai = 'Thu' AND username = @username";
+            command.Parameters.AddWithValue("@username", currentUsername); // Thêm tham số username vào câu lệnh SQL
             adapter.SelectCommand = command;
             table.Clear();
             adapter.Fill(table);
@@ -35,12 +48,16 @@ namespace QLChiTieu
             // Đổi tên các cột sau khi bind data
             income_dgv.Columns[0].HeaderText = "ID";
             income_dgv.Columns[1].HeaderText = "Số tiền (VNĐ)";
-            income_dgv.Columns[2].HeaderText = "Nhóm";
-            income_dgv.Columns[3].HeaderText = "Ghi chú";
-            income_dgv.Columns[4].HeaderText = "Ngày tháng";
+            income_dgv.Columns[2].HeaderText = "Danh mục";
+            income_dgv.Columns[3].HeaderText = "Loại";
+            income_dgv.Columns[4].HeaderText = "Ghi chú";
+            income_dgv.Columns[5].HeaderText = "Ngày tháng";
+            income_dgv.Columns[6].HeaderText = "Người dùng"; // Cột người dùng
 
             // Ẩn cột ID
             income_dgv.Columns[0].Visible = false;
+            income_dgv.Columns[3].Visible = false; // Ẩn cột "Loại"
+            income_dgv.Columns[6].Visible = false; // Ẩn cột "Người dùng"
 
             //Căn giữa tiêu đề cột
             income_dgv.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -52,12 +69,12 @@ namespace QLChiTieu
             // Định dạng thêm cho các cột
             income_dgv.Columns[0].Width = 50;          // Độ rộng cột
             income_dgv.Columns[1].DefaultCellStyle.Format = "N0";  // Format số tiền
-            income_dgv.Columns[4].DefaultCellStyle.Format = "dd/MM/yyyy"; // Format ngày
+            income_dgv.Columns[5].DefaultCellStyle.Format = "dd/MM/yyyy"; // Format ngày
 
             // Căn chỉnh nội dung
             income_dgv.Columns[0].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             income_dgv.Columns[1].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; //căn cột số tiền bên phải
-            income_dgv.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; //căn cột Ngày tháng bên phải
+            income_dgv.Columns[5].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; //căn cột Ngày tháng bên phải
 
         }
         public IncomeForm()
@@ -68,9 +85,9 @@ namespace QLChiTieu
         private void IncomeForm_Load(object sender, EventArgs e)
         {
             connection = new SqlConnection(str);
-            connection.Open();
-            loadData();
-            connection.Close();
+            //connection.Open();
+            //LoadDataForUser(currentUsername);
+            //connection.Close();
         }
 
         private void income_addBtn_Click(object sender, EventArgs e)
@@ -78,33 +95,31 @@ namespace QLChiTieu
             try
             {
                 connection.Open();
-                string insertData = "INSERT INTO KhoanThu (SoTien, Nhom, GhiChu, NgayThang) VALUES (@SoTien, @Nhom, @GhiChu, @NgayThang)";
+                string insertData = "INSERT INTO QLThuChi (SoTien, DanhMuc, Loai, GhiChu, NgayThang, username) VALUES (@SoTien, @DanhMuc, @Loai, @GhiChu, @NgayThang, @username)";
                 using (SqlCommand insertCommand = new SqlCommand(insertData, connection))
                 {
                     insertCommand.Parameters.AddWithValue("@SoTien", income_money.Text);
-                    insertCommand.Parameters.AddWithValue("@Nhom", income_group.Text);
+                    insertCommand.Parameters.AddWithValue("@DanhMuc", income_group.Text);
+                    insertCommand.Parameters.AddWithValue("@Loai", "Thu"); // Đặt loại là "Thu"
                     insertCommand.Parameters.AddWithValue("@GhiChu", income_note.Text);
                     insertCommand.Parameters.AddWithValue("@NgayThang", income_date.Value);
+                    insertCommand.Parameters.AddWithValue("@username", currentUsername); // Thêm tham số username vào câu lệnh SQL
                     insertCommand.ExecuteNonQuery();
+                    connection.Close(); // Đóng kết nối sau khi thực hiện lệnh
                     MessageBox.Show("Thêm khoản thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    loadData();
+                    income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
+
+                    income_money.Clear(); // Xóa nội dung ô nhập tiền
+                    income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
+                    income_note.Clear(); // Xóa nội dung ô ghi chú
+                    income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
+
+                    LoadDataForUser(currentUsername);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
-
-                income_money.Clear(); // Xóa nội dung ô nhập tiền
-                income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
-                income_note.Clear(); // Xóa nội dung ô ghi chú
-                income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
-
-                // Đóng kết nối trong khối finally để đảm bảo nó luôn được thực thi
-                connection.Close();
             }
         }
 
@@ -113,48 +128,54 @@ namespace QLChiTieu
             try
             {
                 connection.Open();
-                string updateData = "UPDATE KhoanThu SET SoTien = @SoTien, Nhom = @Nhom, GhiChu = @GhiChu, NgayThang = @NgayThang WHERE id = @STT";
+                string updateData = "UPDATE QLThuChi SET SoTien = @SoTien, DanhMuc = @DanhMuc, GhiChu = @GhiChu, NgayThang = @NgayThang WHERE id = @STT";
                 using (SqlCommand updateCommand = new SqlCommand(updateData, connection))
                 {
                     updateCommand.Parameters.AddWithValue("@SoTien", income_money.Text);
-                    updateCommand.Parameters.AddWithValue("@Nhom", income_group.Text);
+                    updateCommand.Parameters.AddWithValue("@DanhMuc", income_group.Text);
                     updateCommand.Parameters.AddWithValue("@GhiChu", income_note.Text);
                     updateCommand.Parameters.AddWithValue("@NgayThang", income_date.Value);
                     updateCommand.Parameters.AddWithValue("@STT", tempID);
                     updateCommand.ExecuteNonQuery();
+                    connection.Close(); // Đóng kết nối sau khi thực hiện lệnh
                     MessageBox.Show("Cập nhật khoản thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    loadData();
+                    income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
+
+                    income_money.Clear(); // Xóa nội dung ô nhập tiền
+                    income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
+                    income_note.Clear(); // Xóa nội dung ô ghi chú
+                    income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
+
+                    LoadDataForUser(currentUsername);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
-
-                income_money.Clear(); // Xóa nội dung ô nhập tiền
-                income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
-                income_note.Clear(); // Xóa nội dung ô ghi chú
-                income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
-                connection.Close();
-            }
         }
 
         private void income_dgv_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            //Bôi đen cả dòng được chọn
+            if (income_dgv.CurrentRow != null)
+            {
+                income_dgv.CurrentRow.Selected = true; // Bôi đen dòng hiện tại
+            }
+            income_dgv.DefaultCellStyle.SelectionBackColor = Color.FromArgb(49, 121, 84);
+
+
             // Lấy id từ cột đầu tiên (index 0)
             tempID = income_dgv.CurrentRow.Cells[0].Value.ToString();
 
             // Hiển thị dữ liệu vào các ô nhập liệu
             income_money.Text = income_dgv.CurrentRow.Cells[1].Value.ToString();
             income_group.Text = income_dgv.CurrentRow.Cells[2].Value.ToString();
-            income_note.Text = income_dgv.CurrentRow.Cells[3].Value.ToString();
+            income_note.Text = income_dgv.CurrentRow.Cells[4].Value.ToString();
             //Check xem giá trị có phải là DBNull hay không trước khi chuyển đổi
             if (income_dgv.CurrentRow.Cells[4].Value != DBNull.Value && !string.IsNullOrEmpty(income_dgv.CurrentRow.Cells[4].Value.ToString()))
             {
-                income_date.Value = DateTime.Parse(income_dgv.CurrentRow.Cells[4].Value.ToString());
+                income_date.Value = DateTime.Parse(income_dgv.CurrentRow.Cells[5].Value.ToString());
             }
             else
             {
@@ -179,28 +200,26 @@ namespace QLChiTieu
                 }
 
                 connection.Open();
-                string deleteData = "DELETE FROM KhoanThu WHERE id = @STT";
+                string deleteData = "DELETE FROM QLThuChi WHERE id = @STT";
                 using (SqlCommand deleteCommand = new SqlCommand(deleteData, connection))
                 {
                     deleteCommand.Parameters.AddWithValue("@STT", tempID);
                     deleteCommand.ExecuteNonQuery();
+                    connection.Close(); // Đóng kết nối sau khi thực hiện lệnh
                     MessageBox.Show("Xóa khoản thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    loadData();
+                    income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
+
+                    income_money.Clear(); // Xóa nội dung ô nhập tiền
+                    income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
+                    income_note.Clear(); // Xóa nội dung ô ghi chú
+                    income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
+
+                    LoadDataForUser(currentUsername);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
-
-                income_money.Clear(); // Xóa nội dung ô nhập tiền
-                income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
-                income_note.Clear(); // Xóa nội dung ô ghi chú
-                income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
-                connection.Close();
             }
         }
 
@@ -213,27 +232,24 @@ namespace QLChiTieu
                 {
                     return;
                 }
-                string clearData = "DELETE FROM KhoanThu";
+                string clearData = "DELETE FROM QLThuChi";
                 using (SqlCommand clearCommand = new SqlCommand(clearData, connection))
                 {
                     clearCommand.ExecuteNonQuery();
+                    connection.Close(); // Đóng kết nối sau khi thực hiện lệnh
                     MessageBox.Show("Xóa tất cả khoản thu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    loadData();
+                    income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
+                    income_money.Clear(); // Xóa nội dung ô nhập tiền
+                    income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
+                    income_note.Clear(); // Xóa nội dung ô ghi chú
+                    income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
+
+                    LoadDataForUser(currentUsername);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                income_dgv.ClearSelection(); // Xóa chọn dòng trong DataGridView
-                income_money.Clear(); // Xóa nội dung ô nhập tiền
-                income_group.SelectedIndex = -1; // Đặt lại ô chọn nhóm
-                income_note.Clear(); // Xóa nội dung ô ghi chú
-                income_date.Value = DateTime.Now; // Đặt lại ngày tháng về ngày hiện tại
-
-                connection.Close();
             }
         }
 
@@ -253,7 +269,7 @@ namespace QLChiTieu
 
         private void income_cbChonTruongLoc_SelectedIndexChanged(object sender, EventArgs e)
         {
-            loadData();
+            LoadDataForUser(currentUsername);
             switch(income_cbChonTruongLoc.SelectedIndex)
             {
                 case 0: // Danh mục
@@ -299,8 +315,9 @@ namespace QLChiTieu
                     }
                     string selectedCategory = income_cbLocDanhMuc.SelectedItem.ToString();
                     command = connection.CreateCommand();
-                    command.CommandText = "SELECT * FROM KhoanThu WHERE Nhom = @Nhom";
-                    command.Parameters.AddWithValue("@Nhom", selectedCategory);
+                    command.CommandText = "SELECT * FROM QLThuChi WHERE DanhMuc = @DanhMuc AND Loai = 'Thu' AND username = @username";
+                    command.Parameters.AddWithValue("@DanhMuc", selectedCategory);
+                    command.Parameters.AddWithValue("@username", currentUsername); // Thêm tham số username vào câu lệnh SQL
                     adapter.SelectCommand = command;
                     table.Clear();
                     adapter.Fill(table);
@@ -320,9 +337,10 @@ namespace QLChiTieu
                         return;
                     }
                     command = connection.CreateCommand();
-                    command.CommandText = "SELECT * FROM KhoanThu WHERE SoTien BETWEEN @MinAmount AND @MaxAmount";
+                    command.CommandText = "SELECT * FROM QLThuChi WHERE SoTien BETWEEN @MinAmount AND @MaxAmount AND Loai = 'Thu' AND username = @username";
                     command.Parameters.AddWithValue("@MinAmount", minAmount);
                     command.Parameters.AddWithValue("@MaxAmount", maxAmount);
+                    command.Parameters.AddWithValue("@username", currentUsername); // Thêm tham số username vào câu lệnh SQL
                     adapter.SelectCommand = command;
                     table.Clear();
                     adapter.Fill(table);
@@ -340,9 +358,10 @@ namespace QLChiTieu
                     }
 
                     command = connection.CreateCommand();
-                    command.CommandText = "SELECT * FROM KhoanThu WHERE NgayThang BETWEEN @StartDate AND @EndDate";
+                    command.CommandText = "SELECT * FROM QLThuChi WHERE NgayThang >= @StartDate AND NgayThang <= @EndDate AND Loai = 'Thu' AND username = @username";
                     command.Parameters.AddWithValue("@StartDate", startDate);
                     command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue("@username", currentUsername); // Thêm tham số username vào câu lệnh SQL
                     adapter.SelectCommand = command;
                     table.Clear();
                     adapter.Fill(table);
@@ -355,17 +374,12 @@ namespace QLChiTieu
         {
             try
             {
-                connection.Open();
-                loadData(); // Tải lại dữ liệu từ cơ sở dữ liệu
+                LoadDataForUser(currentUsername); // Tải lại dữ liệu từ cơ sở dữ liệu
                 MessageBox.Show("Đã tải lại dữ liệu!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message, "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                connection.Close(); // Đóng kết nối sau khi hoàn thành
             }
         }
     }

@@ -44,25 +44,11 @@ namespace QLChiTieu
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            MainForm mainForm = new MainForm(login_username.Text);
-            mainForm.ShowDialog();
-            this.Hide();
-        }
-
-        private void close_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
         private void login_signupBtn_Click(object sender, EventArgs e)
         {
             RegisterForm registerForm = new RegisterForm();
-            registerForm.ShowDialog();
-
             this.Hide();
+            registerForm.ShowDialog();
         }
 
         private void login_showPass_CheckedChanged(object sender, EventArgs e)
@@ -81,7 +67,7 @@ namespace QLChiTieu
             {
                 connect.Open();
                 
-                string selectData = "SELECT * FROM TaiKhoan WHERE username = @username AND password = @password";
+                string selectData = "SELECT username FROM TaiKhoan WHERE username = @username AND password = @password";
 
                 using (SqlCommand cmd = new SqlCommand(selectData, connect))
                 {
@@ -96,13 +82,16 @@ namespace QLChiTieu
                     if (table.Rows.Count == 0)
                     {
                         MessageBox.Show("Tên tài khoản hoặc mật khẩu không đúng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
                     }
                     else
                     {
                         MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        string username = table.Rows[0]["username"].ToString();
                         MainForm mainForm = new MainForm(login_username.Text);
-                        mainForm.Show();
+                        mainForm.SetCurrentUser(username);
                         this.Hide();
+                        mainForm.ShowDialog();
                     }
                 }
             }
@@ -112,6 +101,7 @@ namespace QLChiTieu
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
+                e.Handled = true; // Ngăn không cho sự kiện Enter lan truyền
                 login_btn_Click(sender, e);
             }
         }

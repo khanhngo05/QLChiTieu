@@ -14,17 +14,49 @@ namespace QLChiTieu
     {
         private DebtBook debtBook;
         private IncomeForm incomeForm;
+        private Expenditure expenditure;
+        private StaticsticalForm statics;
 
+        private string currentUsername;
+
+        public void SetCurrentUser(string username)
+        {
+            currentUsername = username;
+            //Cập nhật dữ liệu cho user hiện tại
+            LoadUserData();
+        }
+        private void LoadUserData()
+        {
+            // Gọi phương thức load dữ liệu của từng form con
+            if (incomeForm != null)
+                incomeForm.LoadDataForUser(currentUsername);
+            if (expenditure != null)
+                expenditure.LoadDataForUser(currentUsername);
+            if (debtBook != null)
+                debtBook.LoadDataForUser(currentUsername);
+            if (statics != null)
+                statics.LoadDataForUser(currentUsername);
+        }
         public MainForm(string username)
         {
             InitializeComponent();
+
+            currentUsername = username;
+
             // Khởi tạo các UserControl
             debtBook = new DebtBook();
             incomeForm = new IncomeForm();
+            expenditure = new Expenditure();
+            statics = new StaticsticalForm();
 
             // Thiết lập các thuộc tính cho UserControl
             debtBook.Dock = DockStyle.Fill;
             incomeForm.Dock = DockStyle.Fill;
+            expenditure.Dock = DockStyle.Fill;
+            statics.Dock = DockStyle.Fill;
+
+            //Load dữ liệu ngay sau khi khởi tạo
+            LoadUserData();
 
             label2.Text = username;
 
@@ -45,27 +77,23 @@ namespace QLChiTieu
         //}
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            base.OnFormClosing(e);
-            if (e.CloseReason == CloseReason.UserClosing) // Kiểm tra nếu người dùng đóng form
+            // Chỉ hiện hộp thoại xác nhận khi người dùng chủ động đóng form
+            if (e.CloseReason == CloseReason.UserClosing &&
+                ModifierKeys != Keys.Alt && // Không phải Alt+F4
+                !this.IsDisposed) // Form chưa bị dispose
             {
                 DialogResult result = MessageBox.Show("Bạn có chắc muốn thoát?", "Xác nhận",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
-                    Application.Exit(); // Đóng toàn bộ ứng dụng
+                    Application.Exit();
                 }
                 else
                 {
-                    e.Cancel = true; // Hủy việc đóng form nếu người dùng chọn No
+                    e.Cancel = true;
                 }
             }
-        }
-
-
-        private void close_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
         }
 
         private void logoutBtn_Click(object sender, EventArgs e)
@@ -76,25 +104,56 @@ namespace QLChiTieu
             }
             else
             {
-                this.Hide();
                 Form1 loginForm = new Form1();
+                this.Hide();
                 loginForm.ShowDialog();
-                this.Close();
+                //this.Close();
             }
         }
 
         private void btnKhoanThu_Click(object sender, EventArgs e)
         {
-            panel3.Controls.Clear(); // Xóa control hiện tại trong panel
-            panel3.Controls.Add(incomeForm); // Thêm IncomeForm
-            incomeForm.BringToFront(); // Đưa lên trên cùng
+            if (incomeForm != null)
+            {
+                incomeForm.LoadDataForUser(currentUsername);
+                panel3.Controls.Clear();
+                panel3.Controls.Add(incomeForm);
+                incomeForm.BringToFront();
+            }
         }
 
         private void btnSoNo_Click(object sender, EventArgs e)
         {
-            panel3.Controls.Clear(); // Xóa control hiện tại trong panel
-            panel3.Controls.Add(debtBook); // Thêm DebtBook
-            debtBook.BringToFront(); // Đưa lên trên cùng
+            // Đảm bảo dữ liệu được load trước khi hiển thị
+            if (debtBook != null)
+            {
+                debtBook.LoadDataForUser(currentUsername);
+                panel3.Controls.Clear();
+                panel3.Controls.Add(debtBook);
+                debtBook.BringToFront();
+            }
+        }
+
+        private void btnKhoanChi_Click(object sender, EventArgs e)
+        {
+            if (expenditure != null)
+            {
+                expenditure.LoadDataForUser(currentUsername);
+                panel3.Controls.Clear();
+                panel3.Controls.Add(expenditure);
+                expenditure.BringToFront();
+            }
+        }
+
+        private void btnThongKe_Click(object sender, EventArgs e)
+        {
+            if (statics != null)
+            {
+                statics.LoadDataForUser(currentUsername);
+                panel3.Controls.Clear();
+                panel3.Controls.Add(statics);
+                statics.BringToFront();
+            }
         }
     }
 }
